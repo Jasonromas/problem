@@ -1,0 +1,92 @@
+## 說明 ##
+
+有天武藤遊戲的爺爺給了遊戲一副牌，說是當今最流行的卡牌遊戲--遊戲王卡!遊戲開心極了，等不及明天到學校和朋友決鬥。但是在當今主流牌組滿天飛的時代，爺爺的卡有些已經過時了，也因此要重組牌組才行，而他最一開始要做的就是將所有的牌進行分類。
+
+請你幫遊戲設計:
+1. 一個結構包含子成員： 
+    - `char name[100]`: 卡牌名稱
+    - `int type`: 卡牌種類，0: monster(怪獸卡)，1: spell(魔法卡)，2: trap(陷阱卡)  
+2. <u>**typedef 該結構成**</u>`card`
+3. 將卡牌依照輸入順序，type分類至`monster`, `spell`, `trap`三個card陣列的function `classify()`，並記錄各type分類的數量至`size[type]`中。
+
+本題已幫你準備好 main.c如下：
+```c
+#include <stdio.h>
+#include <string.h>
+#include "card.h"
+int card_type(char *str){ //reads str and returns type
+	int cmp = strcmp(str, "spell");
+	if(cmp < 0)return 0;
+	else if(cmp == 0)return 1;
+	else return 2;
+}
+int main(int argc, char *argv[]) {
+	int n;
+	scanf("%d", &n);
+	card deck[n]; //records input cards
+  card classified[3][n], arr[3]; //three decks of monster, spell, trap
+	int size[3] = {0, 0, 0}; //records sizes of three decks
+	char input[8];
+	for(int i = 0; i < n; i++){
+		scanf("%s", deck[i].name);
+		scanf("%s", input);
+		deck[i].type = card_type(input);
+	}
+	classify(deck, n, classified[0], classified[1], classified[2], size);
+	int target; //0, 1, 2
+	scanf("%s", input); //which deck to output
+	target = card_type(input);
+	for(int i = 0; i < size[target]; i++){
+		printf("%s\n", classified[target][i].name);
+	}
+}
+```
+請完成card.c和card.h並上傳<br>
+card.h
+```c
+typedef struct Card// or other name you prefer
+{
+    //...
+} card;
+void classify(card *deck, int total, card *monster, card *spell, card *trap, int *size);
+```
+card.c
+```c
+#include "card.h"
+#include <string.h>
+void classify(card *deck, int total, card *monster, card *spell, card *trap, int *size){
+    //...
+}
+```
+
+## Input Format ##
+第一行為$`N`$，代表會接下來會有$`N`$張卡片的輸入，每張卡會有兩行輸入，第一行會是卡牌名稱的字串name，第二行則是卡牌種類type。最後一行會是target字串，是三種type字串其中之一，代表要依照輸入順序輸出所有種類是target的卡的名稱。
+
+- $1 \leq N \leq 10^3$
+- $\forall$ $1 \leq i \leq N$, $1 \leq strlen(\text{name}_i) \leq 100$
+- $\forall$ $1 \leq i \leq N$, $\text{name}_i$ only contains characters in $\text{[a-zA-Z]}$
+- $1 \leq \displaystyle \sum_{i=1} ^ N strlen(\text{name}_i) \leq 1000$
+- $\forall$ $1 \leq i \leq N$, $`\text{type}_i \in \text{\{"monster", "spell", "trap"\}}`$
+- $`\text{target} \in \text{\{"monster", "spell", "trap"\}}`$
+
+## Output Format ##
+輸出所有種類是target的卡的名稱，每行輸出一張後換行，如果沒有則不輸出。
+
+## Sample Input ##
+```
+4
+BlueEyesWhiteDragon
+monster
+MonsterReborn
+spell
+BlackMagicianGirl
+monster
+SkillDrain
+trap
+monster
+```
+## Sample Output ##
+```
+BlueEyesWhiteDragon
+BlackMagicianGirl
+```
